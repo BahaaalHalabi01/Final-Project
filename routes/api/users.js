@@ -4,6 +4,7 @@ const gravatar = require('gravatar')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const keys = require('../../config/keys')
+const passport = require('passport')
 
 const User = require('../../modules/User')
 
@@ -67,7 +68,6 @@ router.post('/login', (req,res) => {
     .then(user => {
 
         
-
         //check for user
         if(!user){
             return res.status(404).json({email: 'User not found'})
@@ -101,5 +101,16 @@ router.post('/login', (req,res) => {
     })
 
 })
+
+
+// @route       GET api/users/current
+// @description return the current user
+// @access      private route
+router.get('/current',passport.authenticate('jwt',{session:false}),(req,res) =>{
+    const {id,name,email} = req.user
+    res.json({id,name,email})
+
+})
+
 
 module.exports = router;
