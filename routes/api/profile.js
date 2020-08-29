@@ -1,7 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const mongoose = require('mongoose')
+// const mongoose = require('mongoose')
 const passport = require('passport')
+
+//load validation 
+const validateProfileInput = require('../../validation/profile')
 
 //load  models
 const Profile = require('../../modules/Profile')
@@ -37,13 +40,20 @@ router.get('/',passport.authenticate('jwt',{session:false}), (req,res) =>{
 // @access      private route
 router.post('/',passport.authenticate('jwt',{session:false}), (req,res) =>{
     
+    const { errors, isValid } = validateProfileInput(req.body)
+
+    //check validation
+    if(!isValid){
+        //return any errors
+        return res.status(400).json(errors)
+    }
+
     //get fields
     const profileFields= {}
-    const errors ={}
-    
+
     profileFields.user = req.user.id
     if(req.body.handle) profileFields.handle = req.body.handle
-    if(req.body.company) profileFields.comapny = req.body.company
+    if(req.body.company) profileFields.company = req.body.company
     if(req.body.website) profileFields.website = req.body.website
     if(req.body.location) profileFields.location = req.body.location
     if(req.body.bio) profileFields.bio = req.body.bio
@@ -62,6 +72,7 @@ router.post('/',passport.authenticate('jwt',{session:false}), (req,res) =>{
     Profile.findOne({user:req.user.id})
         .then(profile => {
             if(profile){
+              
                 //we are updating cz it already exists
                 Profile.findOneAndUpdate(
                     {user:req.user.id},
