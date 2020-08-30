@@ -10,8 +10,8 @@ const validateEducationInput = require('../../validation/education')
 
 
 //load  models
-const Profile = require('../../modules/Profile')
-const User = require('../../modules/User')
+const Profile = require('../../models/Profile')
+const User = require('../../models/User')
 
 
 // @route       GET api/profile/test
