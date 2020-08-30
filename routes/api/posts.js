@@ -6,6 +6,8 @@ const passport = require('passport')
 const Post = require('../../models/Post')
 //validation
 const validatePostInput = require('../../validation/post')
+const Profile = require('../../models/Profile')
+const { response } = require('express')
 
 
 // @route       GET api/posts/test
@@ -57,6 +59,29 @@ router.post('/',passport.authenticate('jwt',{session:false}),(req,res) =>{
     })
 
     newPost.save().then(post => res.json(post)).catch(err => res.status(404).json(err))
+
+})
+
+// @route       DELTE api/posts/:id
+// @description delete post by id
+// @access      private
+router.delete('/:id',passport.authenticate('jwt',{session:false}),(req,res)=>{
+    Profile.findOne({user:req.user.id})
+    .then(profile => {
+        Post.findById(req.params.id).then(post =>{
+            if(post)
+            {
+                //check if the user owns the post
+                
+                if(req.user.id !== post.user.toString()){
+                return res.status(401).json({notauthorized:'User not authorized to delete this post'})
+                }
+
+                //delete
+                post.remove().then(() =>res.json({success: true}))
+            }
+        })
+    }).catch(err => res.status(404).json({postnotfound: 'No post found'}))
 
 })
 
