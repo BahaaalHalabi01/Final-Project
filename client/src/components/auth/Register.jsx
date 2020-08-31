@@ -12,8 +12,13 @@ export default function Register() {
   }
   function handleSubmit(event) {
     event.preventDefault()
-
-    const newUser = inputs
+    const { name, email, password, confirmpassword } = inputs
+    const newUser = {
+      name,
+      email,
+      password,
+      confirmpassword,
+    }
     console.log(newUser)
   }
 
