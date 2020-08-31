@@ -1,5 +1,6 @@
 {
     "editor.formatOnSave": true,
     "prettier.jsxSingleQuote": true,
-    "prettier.semi": false
+    "prettier.semi": false,
+    "prettier.printWidth": 120
 }

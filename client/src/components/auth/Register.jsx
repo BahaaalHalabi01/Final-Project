@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import axios from "axios"
 
 export default function Register() {
   const [inputs, setInputs] = useState({})
@@ -12,14 +13,17 @@ export default function Register() {
   }
   function handleSubmit(event) {
     event.preventDefault()
-    const { name, email, password, confirmpassword } = inputs
+    const { name, email, password, confirmPassword } = inputs
     const newUser = {
       name,
       email,
       password,
-      confirmpassword,
+      confirmPassword,
     }
-    console.log(newUser)
+    axios
+      .post("/api/users/register", newUser)
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err.response.data))
   }
 
   return (
@@ -50,8 +54,7 @@ export default function Register() {
                   onChange={handleChange}
                 />
                 <small className='form-text text-muted'>
-                  This site uses Gravatar so if you want a profile image, use a
-                  Gravatar email
+                  This site uses Gravatar so if you want a profile image, use a Gravatar email
                 </small>
               </div>
               <div className='form-group'>
@@ -69,8 +72,8 @@ export default function Register() {
                   type='password'
                   className='form-control form-control-lg'
                   placeholder='Confirm Password'
-                  name='confirmpassword'
-                  value={inputs.confirmpassword}
+                  name='confirmPassword'
+                  value={inputs.confirmPassword}
                   onChange={handleChange}
                 />
               </div>
