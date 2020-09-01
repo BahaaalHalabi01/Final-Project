@@ -1,10 +1,14 @@
 import React, { useState } from "react"
+import PropTypes from "prop-types"
 import axios from "axios"
 import classnames from "classnames"
+import { connect } from "react-redux"
+import { registerUser } from "../../actions/authActions"
 
-export default function Register() {
+function Register(props) {
   const [inputs, setInputs] = useState({})
   const [errors, setErrors] = useState({})
+  const { user } = props.auth
 
   function handleChange(event) {
     const { name, value } = event.target
@@ -22,10 +26,8 @@ export default function Register() {
       password,
       confirmPassword,
     }
-    axios
-      .post("/api/users/register", newUser)
-      .then((res) => console.log(res.data))
-      .catch((err) => setErrors(err.response.data))
+
+    props.registerUser(newUser)
   }
 
   return (
@@ -100,3 +102,14 @@ export default function Register() {
     </div>
   )
 }
+
+Register.propTypes = {
+  registerUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+})
+
+export default connect(mapStateToProps, { registerUser })(Register)
