@@ -1,14 +1,13 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
-import axios from "axios"
 import classnames from "classnames"
+import { withRouter } from "react-router-dom"
 import { connect } from "react-redux"
 import { registerUser } from "../../actions/authActions"
 
 function Register(props) {
   const [inputs, setInputs] = useState({})
   const [errors, setErrors] = useState({})
-  const { user } = props.auth
 
   function handleChange(event) {
     const { name, value } = event.target
@@ -17,6 +16,15 @@ function Register(props) {
       [name]: value,
     }))
   }
+
+  useEffect(() => {
+    return () => {
+      if (props.errors) {
+        setErrors(props.errors)
+      }
+    }
+  })
+
   function handleSubmit(event) {
     event.preventDefault()
     const { name, email, password, confirmPassword } = inputs
@@ -27,7 +35,7 @@ function Register(props) {
       confirmPassword,
     }
 
-    props.registerUser(newUser)
+    props.registerUser(newUser, props.history)
   }
 
   return (
@@ -106,10 +114,12 @@ function Register(props) {
 Register.propTypes = {
   registerUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  errors: state.errors,
 })
 
-export default connect(mapStateToProps, { registerUser })(Register)
+export default connect(mapStateToProps, { registerUser })(withRouter(Register))
