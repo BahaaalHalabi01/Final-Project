@@ -17,17 +17,15 @@ function Login(props) {
 
     console.log(inputs)
   }
+
   useEffect(() => {
     if (props.auth.isAuthenticated) {
       props.history.push("/dashboard")
     }
-
-    return () => {
-      if (props.errors) {
-        setErrors(props.errors)
-      }
+    if (props.errors) {
+      setErrors(props.errors)
     }
-  })
+  }, [props])
 
   function handleSubmit(event) {
     event.preventDefault()
