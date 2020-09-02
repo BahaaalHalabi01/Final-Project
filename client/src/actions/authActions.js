@@ -10,7 +10,7 @@ export const registerUser = (userData, history) => (dispatch) => {
   axios
     .post("/api/users/register", userData)
     .then((res) => history.push("/login"))
-    .catch(
+    .catch((err) =>
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
@@ -35,7 +35,7 @@ export const loginUser = (userData) => (dispatch) => {
       //set current user
       dispatch(setCurrentUser(decodedToken))
     })
-    .catch(
+    .catch((err) =>
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data,
