@@ -18,6 +18,10 @@ function Register(props) {
   }
 
   useEffect(() => {
+    if (props.auth.isAuthenticated) {
+      props.history.push("/dashboard")
+    }
+
     return () => {
       if (props.errors) {
         setErrors(props.errors)
