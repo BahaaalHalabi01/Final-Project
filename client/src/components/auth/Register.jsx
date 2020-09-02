@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
-import classnames from "classnames"
 import { withRouter } from "react-router-dom"
 import { connect } from "react-redux"
 import { registerUser } from "../../actions/authActions"
+import TextFieldGroup from "../common/TextFieldGroup"
 
 function Register(props) {
   const [inputs, setInputs] = useState({})
@@ -21,13 +21,10 @@ function Register(props) {
     if (props.auth.isAuthenticated) {
       props.history.push("/dashboard")
     }
-
-    return () => {
-      if (props.errors) {
-        setErrors(props.errors)
-      }
+    if (props.errors) {
+      setErrors(props.errors)
     }
-  })
+  }, [props])
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -38,7 +35,7 @@ function Register(props) {
       password,
       confirmPassword,
     }
-
+    console.log(newUser)
     props.registerUser(newUser, props.history)
   }
 
@@ -50,62 +47,40 @@ function Register(props) {
             <h1 className='display-4 text-center'>Sign Up</h1>
             <p className='lead text-center'>Create your DevConnector account</p>
             <form onSubmit={handleSubmit}>
-              <div className='form-group'>
-                <input
-                  type='text'
-                  className={classnames("form-control form-control-lg", {
-                    "is-invalid": errors.name,
-                  })}
-                  placeholder='Name'
-                  name='name'
-                  value={inputs.name}
-                  onChange={handleChange}
-                />
+              <TextFieldGroup
+                name='name'
+                placeholder='Name'
+                value={inputs.name}
+                onChange={handleChange}
+                error={errors.name}
+              />
+              <TextFieldGroup
+                name='email'
+                type='email'
+                placeholder='Email Address'
+                value={inputs.email}
+                onChange={handleChange}
+                error={errors.email}
+                info='This site uses Gravat so if you want a profile image, use a Gravat email'
+              />
 
-                {errors.name && <div className='invalid-feedback'>{errors.name}</div>}
-              </div>
-              <div className='form-group'>
-                <input
-                  type='email'
-                  className={classnames("form-control form-control-lg", {
-                    "is-invalid": errors.email,
-                  })}
-                  placeholder='Email Address'
-                  name='email'
-                  value={inputs.email}
-                  onChange={handleChange}
-                />
-                <small className='form-text text-muted'>
-                  This site uses Gravatar so if you want a profile image, use a Gravatar email
-                </small>
-                {errors.email && <div className='invalid-feedback'>{errors.email}</div>}
-              </div>
-              <div className='form-group'>
-                <input
-                  type='password'
-                  className={classnames("form-control form-control-lg", {
-                    "is-invalid": errors.password,
-                  })}
-                  placeholder='Password'
-                  name='password'
-                  value={inputs.password}
-                  onChange={handleChange}
-                />
-                {errors.password && <div className='invalid-feedback'>{errors.password}</div>}
-              </div>
-              <div className='form-group'>
-                <input
-                  type='password'
-                  className={classnames("form-control form-control-lg", {
-                    "is-invalid": errors.confirmPassword,
-                  })}
-                  placeholder='Confirm Password'
-                  name='confirmPassword'
-                  value={inputs.confirmPassword}
-                  onChange={handleChange}
-                />
-                {errors.confirmPassword && <div className='invalid-feedback'>{errors.confirmPassword}</div>}
-              </div>
+              <TextFieldGroup
+                name='password'
+                type='password'
+                placeholder='Password'
+                value={inputs.password}
+                onChange={handleChange}
+                error={errors.password}
+              />
+
+              <TextFieldGroup
+                name='confirmPassword'
+                type='password'
+                placeholder='Confirm Password'
+                value={inputs.confirmPassword}
+                onChange={handleChange}
+                error={errors.confirmPassword}
+              />
               <input type='submit' className='btn btn-info btn-block mt-4' />
             </form>
           </div>
