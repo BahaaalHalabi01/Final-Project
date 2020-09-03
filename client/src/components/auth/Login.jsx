@@ -14,8 +14,6 @@ function Login(props) {
       ...inputs,
       [name]: value,
     }))
-
-    console.log(inputs)
   }
 
   useEffect(() => {

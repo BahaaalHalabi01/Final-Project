@@ -8,7 +8,7 @@ function Landing(props) {
     if (props.auth.isAuthenticated) {
       props.history.push("/dashboard")
     }
-  })
+  }, [props.auth])
 
   return (
     <div>
