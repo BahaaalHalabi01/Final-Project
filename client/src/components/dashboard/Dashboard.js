@@ -1,14 +1,16 @@
 import React, { useEffect } from "react"
 import PropTypes from "prop-types"
-import { Link } from "react-router-do,"
+import { Link } from "react-router-dom"
 import { connect } from "react-redux"
 import { getCurrentProfile } from "../../actions/profileActions"
 import Spinner from "../common/Spinner"
 
 function Dashboard(props) {
+  const getCurrentProfile = props.getCurrentProfile
+
   useEffect(() => {
-    props.getCurrentProfile()
-  }, [])
+    getCurrentProfile()
+  }, [getCurrentProfile])
 
   const { user } = props.auth
   const { profile, loading } = props.profile
