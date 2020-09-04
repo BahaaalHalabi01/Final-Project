@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { withRouter } from "react-router-dom"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
@@ -9,53 +9,78 @@ import SelectListGroup from "../common/SelectListGroup"
 import { createProfile, getCurrentProfile } from "../../actions/profileActions"
 import isEmpty from "../../validation/isEmpty"
 
-function CreateProfile(props) {
-  const [state, setState] = useState({
-    errors: {},
-  })
-  // const [errors, setErrors] = useState({})
-  const { errors, getCurrentProfile, profile } = props
+function EditProfile(props) {
+  const [state, setState] = useState({})
+  const [errors, setErrors] = useState({})
+  const firstRender = useRef(true)
+  const firstProfile = useRef(true)
+
+  const { createProfile, getCurrentProfile, history } = props
+
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
+
+    if (props.errors) {
+      setErrors(props.errors)
+    }
+  }, [props.errors])
+
+  //handling populating the input
+  useEffect(() => {
+    if (firstProfile.current) {
+      getCurrentProfile()
+      firstProfile.current = false
+      return
+    }
+
+    if (props.profile.profile) {
+      const profile = props.profile.profile
+      profile.skills = profile.skills.join(",")
+      profile.company = !isEmpty(profile.company) ? profile.company : ""
+      profile.website = !isEmpty(profile.website) ? profile.website : ""
+      profile.location = !isEmpty(profile.location) ? profile.location : ""
+      profile.githubusername = !isEmpty(profile.githubusername) ? profile.githubusername : ""
+      profile.bio = !isEmpty(profile.bio) ? profile.bio : ""
+      profile.social = !isEmpty(profile.social) ? profile.social : {}
+      profile.twitter = !isEmpty(profile.social.twitter) ? profile.twitter : ""
+      profile.facebook = !isEmpty(profile.social.facebook) ? profile.facebook : ""
+      profile.linkedin = !isEmpty(profile.social.linkedin) ? profile.linkedin : ""
+      profile.youtube = !isEmpty(profile.social.youtube) ? profile.youtube : ""
+      profile.instagram = !isEmpty(profile.social.instagram) ? profile.instagram : ""
+      setState(profile)
+    }
+  }, [props.profile.profile])
 
   function onSubmit(event) {
     event.preventDefault()
     let { displaySocialInputs, ...profileData } = state
-    props.createProfile(profileData, props.history)
+    createProfile(profileData, history)
   }
 
   function onChange(event) {
     setState({ ...state, [event.target.name]: event.target.value })
   }
-  useEffect(() => {
-    if (errors) {
-      setState((state) => ({ ...state, errors }))
-    }
-  }, [errors])
 
-  useEffect(() => {
-    getCurrentProfile()
-
-    if (profile.profile) {
-      const currentProfile = profile.profile
-
-      currentProfile.skills = currentProfile.skills.join(",")
-      currentProfile.company = !isEmpty(currentProfile.company) ? currentProfile.company : ""
-      currentProfile.website = !isEmpty(currentProfile.website) ? currentProfile.website : ""
-      currentProfile.location = !isEmpty(currentProfile.location) ? currentProfile.location : ""
-      currentProfile.githubusername = !isEmpty(currentProfile.githubusername) ? currentProfile.githubusername : ""
-      currentProfile.bio = !isEmpty(currentProfile.bio) ? currentProfile.bio : ""
-      currentProfile.social = !isEmpty(currentProfile.social) ? currentProfile.social : {}
-      currentProfile.twitter = !isEmpty(currentProfile.social.twitter) ? currentProfile.twitter : ""
-      currentProfile.facebook = !isEmpty(currentProfile.social.facebook) ? currentProfile.facebook : ""
-      currentProfile.linkedin = !isEmpty(currentProfile.social.linkedin) ? currentProfile.linkedin : ""
-      currentProfile.youtube = !isEmpty(currentProfile.social.youtube) ? currentProfile.youtube : ""
-      currentProfile.instagram = !isEmpty(currentProfile.social.instagram) ? currentProfile.instagram : ""
-
-      setState(currentProfile, state.errors)
-    }
-  }, [])
-
+  const {
+    twitter,
+    facebook,
+    linkedin,
+    youtube,
+    instagram,
+    handle,
+    status,
+    company,
+    website,
+    location,
+    skills,
+    githubusername,
+    bio,
+    displaySocialInputs,
+  } = state
   let socialInputs
-
   if (state.displaySocialInputs) {
     socialInputs = (
       <div>
@@ -63,7 +88,7 @@ function CreateProfile(props) {
           placeholder='Twitter Profile URL'
           name='twitter'
           icon='fab fa-twitter'
-          value={state.twitter}
+          value={twitter}
           onChange={onChange}
           error={errors.twitter}
         />
@@ -71,7 +96,7 @@ function CreateProfile(props) {
           placeholder='Facebook Profile URL'
           name='facebook'
           icon='fab fa-facebook'
-          value={state.facebook}
+          value={facebook}
           onChange={onChange}
           error={errors.facebook}
         />
@@ -79,7 +104,7 @@ function CreateProfile(props) {
           placeholder='Linkedin Profile URL'
           name='linkedin'
           icon='fab fa-linkedin'
-          value={state.linkedin}
+          value={linkedin}
           onChange={onChange}
           error={errors.linkedin}
         />
@@ -87,7 +112,7 @@ function CreateProfile(props) {
           placeholder='Youtube Profile URL'
           name='youtube'
           icon='fab fa-youtube'
-          value={state.youtube}
+          value={youtube}
           onChange={onChange}
           error={errors.youtube}
         />
@@ -95,7 +120,7 @@ function CreateProfile(props) {
           placeholder='Instagram Profile URL'
           name='instagram'
           icon='fab fa-instagram'
-          value={state.instagram}
+          value={instagram}
           onChange={onChange}
           error={errors.twitter}
         />
@@ -127,7 +152,7 @@ function CreateProfile(props) {
               <TextFieldGroup
                 placeholder='* Profile Handle'
                 name='handle'
-                value={state.handle}
+                value={handle}
                 onChange={onChange}
                 error={errors.handle}
                 info='A unique handle for your profile URL. Your full name,company name, nickname,etc'
@@ -135,7 +160,7 @@ function CreateProfile(props) {
               <SelectListGroup
                 placeholder='Status'
                 name='status'
-                value={state.status}
+                value={status}
                 onChange={onChange}
                 error={errors.status}
                 options={options}
@@ -144,7 +169,7 @@ function CreateProfile(props) {
               <TextFieldGroup
                 placeholder='Company'
                 name='company'
-                value={state.company}
+                value={company}
                 onChange={onChange}
                 error={errors.company}
                 info='Could be your own company or one you work for'
@@ -152,7 +177,7 @@ function CreateProfile(props) {
               <TextFieldGroup
                 placeholder='Website'
                 name='website'
-                value={state.website}
+                value={website}
                 onChange={onChange}
                 error={errors.website}
                 info='Could be your own website or a company'
@@ -160,7 +185,7 @@ function CreateProfile(props) {
               <TextFieldGroup
                 placeholder='Location'
                 name='location'
-                value={state.location}
+                value={location}
                 onChange={onChange}
                 error={errors.location}
                 info='City or city & state suggested (eg. Boston, MA)'
@@ -168,7 +193,7 @@ function CreateProfile(props) {
               <TextFieldGroup
                 placeholder='*Skills'
                 name='skills'
-                value={state.skills}
+                value={skills}
                 onChange={onChange}
                 error={errors.skills}
                 info='Please use comma separated values (eg. HTML,CSS,JavaScript)'
@@ -176,7 +201,7 @@ function CreateProfile(props) {
               <TextFieldGroup
                 placeholder='Github Username'
                 name='githubusername'
-                value={state.githubusername}
+                value={githubusername}
                 onChange={onChange}
                 error={errors.githubusername}
                 info='If you want your latest repos and a Github link, include your username'
@@ -184,7 +209,7 @@ function CreateProfile(props) {
               <TextAreaFieldGroup
                 placeholder='Short Bio'
                 name='bio'
-                value={state.bio}
+                value={bio}
                 onChange={onChange}
                 errors={errors.bio}
                 info='Tell us a little about yourself'
@@ -193,7 +218,7 @@ function CreateProfile(props) {
               <div className='mb-3'>
                 <button
                   type='button'
-                  onClick={() => setState({ ...state, displaySocialInputs: !state.displaySocialInputs })}
+                  onClick={() => setState({ ...state, displaySocialInputs: !displaySocialInputs })}
                   className='btn btn-light'
                 >
                   Add Social Network Links
@@ -210,7 +235,7 @@ function CreateProfile(props) {
   )
 }
 
-CreateProfile.propTypes = {
+EditProfile.propTypes = {
   createProfile: PropTypes.func.isRequired,
   getCurrentProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
@@ -222,4 +247,4 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
 })
 
-export default connect(mapStateToProps, { createProfile, getCurrentProfile })(withRouter(CreateProfile))
+export default connect(mapStateToProps, { createProfile, getCurrentProfile })(withRouter(EditProfile))

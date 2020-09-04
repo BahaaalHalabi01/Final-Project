@@ -6,8 +6,10 @@ import { registerUser } from "../../actions/authActions"
 import TextFieldGroup from "../common/TextFieldGroup"
 
 function Register(props) {
-  const [state, setState] = useState({ errors: {} })
+  const [state, setState] = useState({})
+  const [errors, setErrors] = useState({})
   const firstRender = useRef(true)
+
   function handleChange(event) {
     const { name, value } = event.target
     setState((state) => ({
@@ -16,7 +18,7 @@ function Register(props) {
     }))
   }
 
-  const { auth, history, errors } = props
+  const { auth, history } = props
 
   useEffect(() => {
     if (firstRender.current) {
@@ -26,13 +28,10 @@ function Register(props) {
     if (auth.isAuthenticated) {
       history.push("/dashboard")
     }
-    if (errors) {
-      setState((state) => ({ ...state, errors }))
+    if (props.errors) {
+      setErrors(props.errors)
     }
-    return () => {
-      console.log("left register")
-    }
-  }, [errors, history, auth])
+  }, [props.errors, history, auth])
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -45,7 +44,7 @@ function Register(props) {
     }
     props.registerUser(newUser, props.history)
   }
-
+  const { name, email, password, confirmPassword } = state
   return (
     <div className='register'>
       <div className='container'>
@@ -54,20 +53,14 @@ function Register(props) {
             <h1 className='display-4 text-center'>Sign Up</h1>
             <p className='lead text-center'>Create your DevConnector account</p>
             <form onSubmit={handleSubmit}>
-              <TextFieldGroup
-                name='name'
-                placeholder='Name'
-                value={state.name}
-                onChange={handleChange}
-                error={state.errors.name}
-              />
+              <TextFieldGroup name='name' placeholder='Name' value={name} onChange={handleChange} error={errors.name} />
               <TextFieldGroup
                 name='email'
                 type='email'
                 placeholder='Email Address'
-                value={state.email}
+                value={email}
                 onChange={handleChange}
-                error={state.errors.email}
+                error={errors.email}
                 info='This site uses Gravat so if you want a profile image, use a Gravat email'
               />
 
@@ -75,18 +68,18 @@ function Register(props) {
                 name='password'
                 type='password'
                 placeholder='Password'
-                value={state.password}
+                value={password}
                 onChange={handleChange}
-                error={state.errors.password}
+                error={errors.password}
               />
 
               <TextFieldGroup
                 name='confirmPassword'
                 type='password'
                 placeholder='Confirm Password'
-                value={state.confirmPassword}
+                value={confirmPassword}
                 onChange={handleChange}
-                error={state.errors.confirmPassword}
+                error={errors.confirmPassword}
               />
               <input type='submit' className='btn btn-info btn-block mt-4' />
             </form>

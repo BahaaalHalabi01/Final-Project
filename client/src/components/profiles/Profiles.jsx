@@ -13,7 +13,6 @@ function Profiles(props) {
     getProfiles()
   }, [])
 
-  console.log(props)
   let profileItems
   if (profile.profiles === null || loading) {
     profileItems = <Spinner />

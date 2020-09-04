@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { withRouter } from "react-router-dom"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
@@ -9,11 +9,9 @@ import SelectListGroup from "../common/SelectListGroup"
 import { createProfile } from "../../actions/profileActions"
 
 function CreateProfile(props) {
-  const [state, setState] = useState({
-    errors: {},
-  })
-  // const [errors, setErrors] = useState({})
-  const { errors } = props
+  const [state, setState] = useState({})
+  const [errors, setErrors] = useState({})
+  const firstRender = useRef(true)
 
   function onSubmit(event) {
     event.preventDefault()
@@ -27,10 +25,32 @@ function CreateProfile(props) {
   }
 
   useEffect(() => {
-    if (errors) {
-      setState((state) => ({ ...state, errors }))
+    if (firstRender.current) {
+      firstRender.current = false
+      return
     }
-  }, [errors])
+
+    if (props.errors) {
+      setErrors(props.errors)
+    }
+  }, [props.errors])
+
+  const {
+    twitter,
+    facebook,
+    linkedin,
+    youtube,
+    instagram,
+    handle,
+    status,
+    company,
+    website,
+    location,
+    skills,
+    githubusername,
+    bio,
+    displaySocialInputs,
+  } = state
 
   let socialInputs
 
@@ -41,7 +61,7 @@ function CreateProfile(props) {
           placeholder='Twitter Profile URL'
           name='twitter'
           icon='fab fa-twitter'
-          value={state.twitter}
+          value={twitter}
           onChange={onChange}
           error={errors.twitter}
         />
@@ -49,7 +69,7 @@ function CreateProfile(props) {
           placeholder='Facebook Profile URL'
           name='facebook'
           icon='fab fa-facebook'
-          value={state.facebook}
+          value={facebook}
           onChange={onChange}
           error={errors.facebook}
         />
@@ -57,7 +77,7 @@ function CreateProfile(props) {
           placeholder='Linkedin Profile URL'
           name='linkedin'
           icon='fab fa-linkedin'
-          value={state.linkedin}
+          value={linkedin}
           onChange={onChange}
           error={errors.linkedin}
         />
@@ -65,7 +85,7 @@ function CreateProfile(props) {
           placeholder='Youtube Profile URL'
           name='youtube'
           icon='fab fa-youtube'
-          value={state.youtube}
+          value={youtube}
           onChange={onChange}
           error={errors.youtube}
         />
@@ -73,7 +93,7 @@ function CreateProfile(props) {
           placeholder='Instagram Profile URL'
           name='instagram'
           icon='fab fa-instagram'
-          value={state.instagram}
+          value={instagram}
           onChange={onChange}
           error={errors.twitter}
         />
@@ -106,7 +126,7 @@ function CreateProfile(props) {
               <TextFieldGroup
                 placeholder='* Profile Handle'
                 name='handle'
-                value={state.handle}
+                value={handle}
                 onChange={onChange}
                 error={errors.handle}
                 info='A unique handle for your profile URL. Your full name,company name, nickname,etc'
@@ -114,7 +134,7 @@ function CreateProfile(props) {
               <SelectListGroup
                 placeholder='Status'
                 name='status'
-                value={state.status}
+                value={status}
                 onChange={onChange}
                 error={errors.status}
                 options={options}
@@ -123,7 +143,7 @@ function CreateProfile(props) {
               <TextFieldGroup
                 placeholder='Company'
                 name='company'
-                value={state.company}
+                value={company}
                 onChange={onChange}
                 error={errors.company}
                 info='Could be your own company or one you work for'
@@ -131,7 +151,7 @@ function CreateProfile(props) {
               <TextFieldGroup
                 placeholder='Website'
                 name='website'
-                value={state.website}
+                value={website}
                 onChange={onChange}
                 error={errors.website}
                 info='Could be your own website or a company'
@@ -139,7 +159,7 @@ function CreateProfile(props) {
               <TextFieldGroup
                 placeholder='Location'
                 name='location'
-                value={state.location}
+                value={location}
                 onChange={onChange}
                 error={errors.location}
                 info='City or city & state suggested (eg. Boston, MA)'
@@ -147,7 +167,7 @@ function CreateProfile(props) {
               <TextFieldGroup
                 placeholder='*Skills'
                 name='skills'
-                value={state.skills}
+                value={skills}
                 onChange={onChange}
                 error={errors.skills}
                 info='Please use comma separated values (eg. HTML,CSS,JavaScript)'
@@ -155,7 +175,7 @@ function CreateProfile(props) {
               <TextFieldGroup
                 placeholder='Github Username'
                 name='githubusername'
-                value={state.githubusername}
+                value={githubusername}
                 onChange={onChange}
                 error={errors.githubusername}
                 info='If you want your latest repos and a Github link, include your username'
@@ -163,7 +183,7 @@ function CreateProfile(props) {
               <TextAreaFieldGroup
                 placeholder='Short Bio'
                 name='bio'
-                value={state.bio}
+                value={bio}
                 onChange={onChange}
                 errors={errors.bio}
                 info='Tell us a little about yourself'
@@ -172,7 +192,7 @@ function CreateProfile(props) {
               <div className='mb-3'>
                 <button
                   type='button'
-                  onClick={() => setState({ ...state, displaySocialInputs: !state.displaySocialInputs })}
+                  onClick={() => setState({ ...state, displaySocialInputs: !displaySocialInputs })}
                   className='btn btn-light'
                 >
                   Add Social Network Links

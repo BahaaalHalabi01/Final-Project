@@ -7,28 +7,25 @@ import PropTypes from "prop-types"
 import { addExperience } from "../../actions/profileActions"
 
 function AddExperience(props) {
-  const [state, setState] = useState({ errors: {} })
+  const [state, setState] = useState({})
+  const [errors, setErors] = useState({})
   const firstRender = useRef(true)
 
-  const { addExperience, errors } = props
+  const { addExperience } = props
 
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false
       return
     }
-    if (errors) {
-      setState((state) => ({ ...state, errors }))
+    if (props.errors) {
+      setErors(props.errors)
     }
-    // return () => {
-    //   console.log("tried to cleanup")
-    //   setState({ errors: {} })
-    // }
-  }, [errors])
+  }, [props.errors])
 
   function handleSubmit(event) {
     event.preventDefault()
-    let { errors, ...expData } = state
+    let expData = state
     addExperience(expData, props.history)
   }
 
@@ -45,7 +42,7 @@ function AddExperience(props) {
       current: !state.current,
     })
   }
-
+  const { company, title, location, from, to, current, description, disabled } = state
   return (
     <div className='add-experience'>
       <div className='container'>
@@ -61,48 +58,42 @@ function AddExperience(props) {
               <TextFieldGroup
                 placeholder='* Company'
                 name='company'
-                value={state.company}
+                value={company}
                 onChange={handleChange}
-                error={state.errors.company}
+                error={errors.company}
               />
               <TextFieldGroup
                 placeholder='* Job Title'
                 name='title'
-                value={state.title}
+                value={title}
                 onChange={handleChange}
-                error={state.errors.title}
+                error={errors.title}
               />
               <TextFieldGroup
-                placeholder='* Location'
+                placeholder='Location'
                 name='location'
-                value={state.location}
+                value={location}
                 onChange={handleChange}
-                error={state.errors.location}
+                error={errors.location}
               />
               <h6>From Date</h6>
-              <TextFieldGroup
-                name='from'
-                type='date'
-                value={state.from}
-                onChange={handleChange}
-                error={state.errors.from}
-              />
+              <TextFieldGroup name='from' type='date' value={from} onChange={handleChange} error={errors.from} />
               <h6>To Date</h6>
               <TextFieldGroup
                 name='to'
                 type='date'
-                value={state.to}
+                value={to}
                 onChange={handleChange}
-                error={state.errors.to}
-                disabled={state.disabled ? "disabled" : ""}
+                error={errors.to}
+                disabled={disabled ? "disabled" : ""}
               />
               <div className='form-check mb-4'>
                 <input
                   type='checkbox'
                   className='form-check-input'
                   name='current'
-                  value={state.current}
-                  checked={state.current}
+                  value={current}
+                  checked={current}
                   onChange={onCheck}
                   id='current'
                 />
@@ -113,9 +104,9 @@ function AddExperience(props) {
               <TextAreaFieldGroup
                 placeholder='Job Description'
                 name='description'
-                value={state.description}
+                value={description}
                 onChange={handleChange}
-                error={state.errors.description}
+                error={errors.description}
                 info='Tell us about the position'
               />
               <input type='submit' value='Submit' className='btn btn-info btn-block mt-4' />

@@ -7,23 +7,24 @@ import PropTypes from "prop-types"
 import { addEducation } from "../../actions/profileActions"
 
 function AddEducation(props) {
-  const [state, setState] = useState({ errors: {} })
+  const [state, setState] = useState({})
+  const [errors, setErrors] = useState({})
   const firstRender = useRef(true)
-  const { addEducation, errors } = props
+  const { addEducation } = props
 
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false
       return
     }
-    if (errors) {
-      setState((state) => ({ ...state, errors }))
+    if (props.errors) {
+      setErrors(props.errors)
     }
-  }, [errors])
+  }, [props.errors])
 
   function handleSubmit(event) {
     event.preventDefault()
-    let { errors, ...eduData } = state
+    let eduData = state
     addEducation(eduData, props.history)
   }
 
@@ -40,7 +41,7 @@ function AddEducation(props) {
       current: !state.current,
     })
   }
-
+  const { school, degree, fieldofstudy, from, to, current, description, disabled } = state
   return (
     <div className='add-education'>
       <div className='container'>
@@ -56,48 +57,42 @@ function AddEducation(props) {
               <TextFieldGroup
                 placeholder='* School'
                 name='school'
-                value={state.school}
+                value={school}
                 onChange={handleChange}
-                error={state.errors.school}
+                error={errors.school}
               />
               <TextFieldGroup
                 placeholder='* Degree or Certificate'
                 name='degree'
-                value={state.degree}
+                value={degree}
                 onChange={handleChange}
-                error={state.errors.degree}
+                error={errors.degree}
               />
               <TextFieldGroup
                 placeholder='* Field of study'
                 name='fieldofstudy'
-                value={state.fieldofstudy}
+                value={fieldofstudy}
                 onChange={handleChange}
-                error={state.errors.fieldofstudy}
+                error={errors.fieldofstudy}
               />
               <h6>From Date</h6>
-              <TextFieldGroup
-                name='from'
-                type='date'
-                value={state.from}
-                onChange={handleChange}
-                error={state.errors.from}
-              />
+              <TextFieldGroup name='from' type='date' value={from} onChange={handleChange} error={errors.from} />
               <h6>To Date</h6>
               <TextFieldGroup
                 name='to'
                 type='date'
-                value={state.to}
+                value={to}
                 onChange={handleChange}
-                error={state.errors.to}
-                disabled={state.disabled ? "disabled" : ""}
+                error={errors.to}
+                disabled={disabled ? "disabled" : ""}
               />
               <div className='form-check mb-4'>
                 <input
                   type='checkbox'
                   className='form-check-input'
                   name='current'
-                  value={state.current}
-                  checked={state.current}
+                  value={current}
+                  checked={current}
                   onChange={onCheck}
                   id='current'
                 />
@@ -108,9 +103,9 @@ function AddEducation(props) {
               <TextAreaFieldGroup
                 placeholder='Job Description'
                 name='description'
-                value={state.description}
+                value={description}
                 onChange={handleChange}
-                error={state.errors.description}
+                error={errors.description}
                 info='Tell us about the position'
               />
               <input type='submit' value='Submit' className='btn btn-info btn-block mt-4' />

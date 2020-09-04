@@ -5,7 +5,8 @@ import { loginUser } from "../../actions/authActions"
 import TextFieldGroup from "../common/TextFieldGroup"
 
 function Login(props) {
-  const [state, setState] = useState({ errors: {} })
+  const [state, setState] = useState({})
+  const [errors, setErrors] = useState({})
   const firstRender = useRef(true)
 
   function handleChange(event) {
@@ -15,7 +16,7 @@ function Login(props) {
       [name]: value,
     }))
   }
-  const { auth, history, errors } = props
+  const { auth, history } = props
 
   useEffect(() => {
     if (firstRender.current) {
@@ -25,13 +26,13 @@ function Login(props) {
     if (auth.isAuthenticated) {
       history.push("/dashboard")
     }
-    if (errors) {
-      setState((state) => ({ ...state, errors }))
+    if (props.errors) {
+      setErrors(props.errors)
     }
     return () => {
       console.log("left login")
     }
-  }, [errors, history, auth])
+  }, [props.errors, history, auth])
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -42,6 +43,7 @@ function Login(props) {
     }
     props.loginUser(userData)
   }
+  const { email, password } = state
   return (
     <div className='login'>
       <div className='container'>
@@ -54,18 +56,18 @@ function Login(props) {
                 name='email'
                 type='email'
                 placeholder='Email Address'
-                value={state.email}
+                value={email}
                 onChange={handleChange}
-                error={state.errors.email}
+                error={errors.email}
               />
 
               <TextFieldGroup
                 name='password'
                 type='password'
                 placeholder='Passowrd'
-                value={state.password}
+                value={password}
                 onChange={handleChange}
-                error={state.errors.password}
+                error={errors.password}
               />
               <input type='submit' className='btn btn-info btn-block mt-4' />
             </form>
