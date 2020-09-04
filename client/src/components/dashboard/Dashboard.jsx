@@ -5,20 +5,23 @@ import { connect } from "react-redux"
 import { getCurrentProfile, deleteAccount } from "../../actions/profileActions"
 import Spinner from "../common/Spinner"
 import ProfileActions from "./ProfileActions"
+import Experience from "./Experience"
+import Education from "./Education"
 
 function Dashboard(props) {
-  const getCurrentProfile = props.getCurrentProfile
+  const { getCurrentProfile } = props
 
   useEffect(() => {
     getCurrentProfile()
-  }, [getCurrentProfile])
+  }, [])
 
   function onDeleteClick(event) {
     props.deleteAccount()
   }
 
   const { user } = props.auth
-  const { profile, loading } = props.profile
+  const { loading } = props
+  const profile = props.profile.profile
 
   let dashboardContent
 
@@ -34,7 +37,9 @@ function Dashboard(props) {
             {user.name}
           </p>
           <ProfileActions />
-          {/*TODO exp and edu */}
+          <Experience experience={profile.experience} />
+          <Education education={profile.education} />
+
           <div style={{ marginBottom: "60px" }}>
             <button onClick={onDeleteClick} className='btn btn-danger'>
               Delete My Account

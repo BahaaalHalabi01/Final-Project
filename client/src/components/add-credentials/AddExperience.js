@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { Link, withRouter } from "react-router-dom"
 import TextFieldGroup from "../common/TextFieldGroup"
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup"
@@ -8,17 +8,22 @@ import { addExperience } from "../../actions/profileActions"
 
 function AddExperience(props) {
   const [state, setState] = useState({ errors: {} })
+  const firstRender = useRef(true)
 
   const { addExperience, errors } = props
 
   useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
     if (errors) {
       setState((state) => ({ ...state, errors }))
     }
-    return () => {
-      console.log("tried to cleanup")
-      setState({ errors: {} })
-    }
+    // return () => {
+    //   console.log("tried to cleanup")
+    //   setState({ errors: {} })
+    // }
   }, [errors])
 
   function handleSubmit(event) {

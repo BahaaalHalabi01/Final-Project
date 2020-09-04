@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import PropTypes from "prop-types"
 import { withRouter } from "react-router-dom"
 import { connect } from "react-redux"
@@ -7,7 +7,7 @@ import TextFieldGroup from "../common/TextFieldGroup"
 
 function Register(props) {
   const [state, setState] = useState({ errors: {} })
-
+  const firstRender = useRef(true)
   function handleChange(event) {
     const { name, value } = event.target
     setState((state) => ({
@@ -19,6 +19,10 @@ function Register(props) {
   const { auth, history, errors } = props
 
   useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
     if (auth.isAuthenticated) {
       history.push("/dashboard")
     }
