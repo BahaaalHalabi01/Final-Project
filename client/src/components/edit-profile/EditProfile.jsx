@@ -6,18 +6,18 @@ import TextFieldGroup from "../common/TextFieldGroup"
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup"
 import InputGroup from "../common/InputGroup"
 import SelectListGroup from "../common/SelectListGroup"
-import { createProfile } from "../../actions/profileActions"
+import { createProfile, getCurrentProfile } from "../../actions/profileActions"
+import isEmpty from "../../validation/isEmpty"
 
 function CreateProfile(props) {
   const [state, setState] = useState({
     errors: {},
   })
   // const [errors, setErrors] = useState({})
-  const { errors } = props
+  const { errors, getCurrentProfile, profile } = props
 
   function onSubmit(event) {
     event.preventDefault()
-
     let { displaySocialInputs, ...profileData } = state
     props.createProfile(profileData, props.history)
   }
@@ -25,12 +25,34 @@ function CreateProfile(props) {
   function onChange(event) {
     setState({ ...state, [event.target.name]: event.target.value })
   }
-
   useEffect(() => {
     if (errors) {
       setState((state) => ({ ...state, errors }))
     }
   }, [errors])
+
+  useEffect(() => {
+    getCurrentProfile()
+
+    if (profile.profile) {
+      const currentProfile = profile.profile
+
+      currentProfile.skills = currentProfile.skills.join(",")
+      currentProfile.company = !isEmpty(currentProfile.company) ? currentProfile.company : ""
+      currentProfile.website = !isEmpty(currentProfile.website) ? currentProfile.website : ""
+      currentProfile.location = !isEmpty(currentProfile.location) ? currentProfile.location : ""
+      currentProfile.githubusername = !isEmpty(currentProfile.githubusername) ? currentProfile.githubusername : ""
+      currentProfile.bio = !isEmpty(currentProfile.bio) ? currentProfile.bio : ""
+      currentProfile.social = !isEmpty(currentProfile.social) ? currentProfile.social : {}
+      currentProfile.twitter = !isEmpty(currentProfile.social.twitter) ? currentProfile.twitter : ""
+      currentProfile.facebook = !isEmpty(currentProfile.social.facebook) ? currentProfile.facebook : ""
+      currentProfile.linkedin = !isEmpty(currentProfile.social.linkedin) ? currentProfile.linkedin : ""
+      currentProfile.youtube = !isEmpty(currentProfile.social.youtube) ? currentProfile.youtube : ""
+      currentProfile.instagram = !isEmpty(currentProfile.social.instagram) ? currentProfile.instagram : ""
+
+      setState(currentProfile, state.errors)
+    }
+  }, [])
 
   let socialInputs
 
@@ -99,8 +121,7 @@ function CreateProfile(props) {
       <div className='container'>
         <div className='row'>
           <div className='col-md-8 m-auto'>
-            <h1 className='display-4 text-center'>Create Your Profile</h1>
-            <p className='lead text-center'>Let's get some information to make your profile stand out</p>
+            <h1 className='display-4 text-center'>Edit Profile</h1>
             <small className='d-block pb-3'>* = required fields</small>
             <form onSubmit={onSubmit}>
               <TextFieldGroup
@@ -191,6 +212,7 @@ function CreateProfile(props) {
 
 CreateProfile.propTypes = {
   createProfile: PropTypes.func.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
 }
@@ -200,4 +222,4 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
 })
 
-export default connect(mapStateToProps, { createProfile })(withRouter(CreateProfile))
+export default connect(mapStateToProps, { createProfile, getCurrentProfile })(withRouter(CreateProfile))
