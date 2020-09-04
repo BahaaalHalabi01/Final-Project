@@ -1,10 +1,12 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
+import { withRouter } from "react-router-dom"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import TextFieldGroup from "../common/TextFieldGroup"
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup"
 import InputGroup from "../common/InputGroup"
 import SelectListGroup from "../common/SelectListGroup"
+import { createProfile } from "../../actions/profileActions"
 
 function CreateProfile(props) {
   const [state, setState] = useState({
@@ -24,6 +26,23 @@ function CreateProfile(props) {
     // instagram: "",
   })
   const [errors, setErrors] = useState({})
+
+  function onSubmit(event) {
+    event.preventDefault()
+
+    let { displaySocialInputs, ...profileData } = state
+    props.createProfile(profileData, props.history)
+  }
+
+  function onChange(event) {
+    setState({ ...state, [event.target.name]: event.target.value })
+  }
+
+  useEffect(() => {
+    if (props.errors) {
+      setErrors(props.errors)
+    }
+  }, [props.errors])
 
   let socialInputs
 
@@ -74,14 +93,6 @@ function CreateProfile(props) {
     )
   }
 
-  function onSubmit(event) {
-    event.preventDefault()
-    console.log("submited bitches")
-  }
-
-  function onChange(event) {
-    setState({ ...state, [event.target.name]: event.target.value })
-  }
   //select options for status
   const options = [
     { label: "* Select Professional Status", value: "0" },
@@ -172,6 +183,7 @@ function CreateProfile(props) {
 
               <div className='mb-3'>
                 <button
+                  type='button'
                   onClick={() => setState({ ...state, displaySocialInputs: !state.displaySocialInputs })}
                   className='btn btn-light'
                 >
@@ -190,6 +202,7 @@ function CreateProfile(props) {
 }
 
 CreateProfile.propTypes = {
+  createProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
 }
@@ -199,4 +212,4 @@ const mapStateToProps = (state) => ({
   errors: state.errors,
 })
 
-export default connect(mapStateToProps, {})(CreateProfile)
+export default connect(mapStateToProps, { createProfile })(withRouter(CreateProfile))
