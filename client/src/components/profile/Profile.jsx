@@ -26,7 +26,7 @@ function Profile(props) {
     if (props.match.params.handle) {
       getProfileByHandle(props.match.params.handle)
     }
-  }, [props.match.params.handle])
+  }, [])
 
   useEffect(() => {
     if (firstRender.current) {
@@ -37,7 +37,7 @@ function Profile(props) {
       console.log(props)
       props.history.push("/not-found")
     }
-  }, [profile, loading])
+  }, [loading])
 
   if (profile === null || loading) {
     profileContent = <Spinner />

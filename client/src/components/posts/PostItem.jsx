@@ -6,7 +6,7 @@ import { Link } from "react-router-dom"
 import { deletePost, addLike, removeLike } from "../../actions/postActions"
 
 const PostItem = (props) => {
-  const { post, auth } = props
+  const { post, auth, showActions } = props
 
   function handleDeleteClick() {
     props.deletePost(post._id)
@@ -41,24 +41,28 @@ const PostItem = (props) => {
         </div>
         <div className='col-md-10'>
           <p className='lead'>{post.text}</p>
-          <button type='button' className='btn btn-light mr-1' onClick={onLikeClick}>
-            <i
-              className={classnames("fas fa-thumbs-up", {
-                "text-success": findUserLike(post.likes),
-              })}
-            ></i>
-            <span className='badge badge-light'>{post.likes.length}</span>
-          </button>
-          <button type='button' className='btn btn-light mr-1' onClick={onUnLikeClick}>
-            <i className='text-secondary fas fa-thumbs-down'></i>
-          </button>
-          <Link to={`/post/${post._id}`} className='btn btn-info mr-1'>
-            Comments
-          </Link>
-          {post.user === auth.user.id && (
-            <button type='button' className='btn btn-danger mr-1' onClick={handleDeleteClick}>
-              <i className='fas fa-times' />
-            </button>
+          {showActions && (
+            <span>
+              <button type='button' className='btn btn-light mr-1' onClick={onLikeClick}>
+                <i
+                  className={classnames("fas fa-thumbs-up", {
+                    "text-success": findUserLike(post.likes),
+                  })}
+                ></i>
+                <span className='badge badge-light'>{post.likes.length}</span>
+              </button>
+              <button type='button' className='btn btn-light mr-1' onClick={onUnLikeClick}>
+                <i className='text-secondary fas fa-thumbs-down'></i>
+              </button>
+              <Link to={`/post/${post._id}`} className='btn btn-info mr-1'>
+                Comments
+              </Link>
+              {post.user === auth.user.id && (
+                <button type='button' className='btn btn-danger mr-1' onClick={handleDeleteClick}>
+                  <i className='fas fa-times' />
+                </button>
+              )}
+            </span>
           )}
         </div>
       </div>
@@ -72,6 +76,10 @@ PostItem.propTypes = {
   removeLike: PropTypes.func.isRequired,
   post: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+}
+
+PostItem.defaultProps = {
+  showActions: true,
 }
 
 const mapStateToProps = (state) => ({
