@@ -7,7 +7,6 @@ import Spinner from "../common/Spinner"
 import { getPosts } from "../../actions/postActions"
 
 const Posts = (props) => {
-  //fix this error hooks
   const { getPosts } = props
   const { posts, loading } = props.post
   useEffect(() => {
@@ -15,7 +14,7 @@ const Posts = (props) => {
   }, [getPosts])
 
   let postContent
-  console.log(posts)
+
   if (posts === null || loading) {
     postContent = <Spinner />
   } else {

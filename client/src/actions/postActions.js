@@ -85,7 +85,6 @@ export const removeLike = (id) => (dispatch) => {
 
 //get  posts
 export const getPosts = () => (dispatch) => {
-  console.log("getting mofo posts")
   dispatch(clearErrors())
   dispatch(setPostLoading())
   axios

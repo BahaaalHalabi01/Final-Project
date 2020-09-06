@@ -20,9 +20,7 @@ router.get("/", (req, res) => {
   Post.find()
     .sort({ date: -1 })
     .then((posts) => {
-      //added this line because when the posts array is empty it is still outputing an empty array not saying it isnt found
-      if (posts.length === 0) res.status(404).json({ nopostsfound: "No posts found" })
-      else res.json(posts)
+      res.json(posts)
     })
     .catch((err) => res.status(404).json({ nopostsfound: "No posts found" }))
 })

@@ -22,7 +22,6 @@ const PostItem = (props) => {
 
   function findUserLike(likes) {
     if (likes.filter((like) => like.user === auth.user.id).length > 0) {
-      console.log("already")
       return true
     } else {
       return false

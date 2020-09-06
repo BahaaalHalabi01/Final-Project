@@ -29,9 +29,6 @@ function Login(props) {
     if (props.errors) {
       setErrors(props.errors)
     }
-    return () => {
-      console.log("left login")
-    }
   }, [props.errors, history, auth])
 
   function handleSubmit(event) {
