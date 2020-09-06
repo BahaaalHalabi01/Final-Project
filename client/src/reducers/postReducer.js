@@ -25,9 +25,10 @@ export default function (state = initialState, action) {
         posts: state.posts.filter((post) => post._id !== action.payload),
       }
     case ADD_POST:
+      let temp = action.payload
       return {
         ...state,
-        posts: [action.payload, ...state.posts],
+        posts: [...state.posts, temp],
       }
     case GET_POST:
       return {

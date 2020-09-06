@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
 import PropTypes from "prop-types"
 
@@ -13,13 +13,16 @@ export default function ProfileGithub(props) {
 
   const { username } = props
   const { count, sort, clientId, clientSecret } = state
+  const ref = useRef(true)
 
   useEffect(() => {
     const gitUrl = `https://api.github.com/users/${username}/repos?per_page=${count}&soirt=${sort}&client_id=${clientId}&client_secret=${clientSecret}`
     fetch(gitUrl)
       .then((res) => res.json())
       .then((data) => {
-        setState({ ...state, repos: data })
+        if (ref.current) {
+          setState({ ...state, repos: data })
+        }
       })
       .catch((err) => console.log(err))
   }, [username, count, sort, clientId, clientSecret, state])
@@ -46,7 +49,7 @@ export default function ProfileGithub(props) {
   ))
 
   return (
-    <div>
+    <div ref={ref}>
       <hr />
       <h3 className='mb-4'>Latest Github Repos</h3>
       {repoItems}

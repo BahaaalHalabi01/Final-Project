@@ -1,8 +1,9 @@
 import axios from "axios"
-import { ADD_POST, GET_ERRORS, GET_POSTS, POST_LOADING, DELETE_POST, GET_POST } from "./types"
+import { ADD_POST, GET_ERRORS, GET_POSTS, POST_LOADING, DELETE_POST, GET_POST, CLEAR_ERRORS } from "./types"
 
 //add post
 export const addPost = (postData) => (dispatch) => {
+  dispatch(clearErrors())
   axios
     .post("/api/posts", postData)
     .then((res) =>
@@ -20,8 +21,27 @@ export const addPost = (postData) => (dispatch) => {
 }
 //add comment
 export const addComment = (commentData, id) => (dispatch) => {
+  dispatch(clearErrors())
   axios
     .post(`/api/posts/comment/${id}`, commentData)
+    .then((res) =>
+      dispatch({
+        type: GET_POST,
+        payload: res.data,
+      })
+    )
+    .catch((err) =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+    )
+}
+//delete comment
+export const deleteComment = (postId, commentId) => (dispatch) => {
+  dispatch(clearErrors())
+  axios
+    .delete(`/api/posts/comment/${postId}/${commentId}`)
     .then((res) =>
       dispatch({
         type: GET_POST,
@@ -38,6 +58,7 @@ export const addComment = (commentData, id) => (dispatch) => {
 
 //add like
 export const addLike = (id) => (dispatch) => {
+  dispatch(clearErrors())
   axios
     .post(`/api/posts/like/${id}`)
     .then((res) => dispatch(getPosts()))
@@ -50,6 +71,7 @@ export const addLike = (id) => (dispatch) => {
 }
 //remove like
 export const removeLike = (id) => (dispatch) => {
+  dispatch(clearErrors())
   axios
     .post(`/api/posts/unlike/${id}`)
     .then((res) => dispatch(getPosts()))
@@ -63,6 +85,8 @@ export const removeLike = (id) => (dispatch) => {
 
 //get  posts
 export const getPosts = () => (dispatch) => {
+  console.log("getting mofo posts")
+  dispatch(clearErrors())
   dispatch(setPostLoading())
   axios
     .get("/api/posts")
@@ -82,6 +106,7 @@ export const getPosts = () => (dispatch) => {
 
 //get  posts
 export const getPost = (id) => (dispatch) => {
+  dispatch(clearErrors())
   dispatch(setPostLoading())
   axios
     .get(`/api/posts/${id}`)
@@ -102,6 +127,7 @@ export const getPost = (id) => (dispatch) => {
 //delete post
 
 export const deletePost = (id) => (dispatch) => {
+  dispatch(clearErrors())
   axios
     .delete(`/api/posts/${id}`)
     .then((res) =>
@@ -122,5 +148,12 @@ export const deletePost = (id) => (dispatch) => {
 export const setPostLoading = () => {
   return {
     type: POST_LOADING,
+  }
+}
+
+//clear errors
+export const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS,
   }
 }

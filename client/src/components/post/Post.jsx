@@ -6,6 +6,7 @@ import { getPost } from "../../actions/postActions"
 import PostItem from "../posts/PostItem"
 import { Link } from "react-router-dom"
 import CommentForm from "./CommentForm"
+import CommentFeed from './CommentFeed'
 
 const Post = (props) => {
   const {
@@ -28,6 +29,7 @@ const Post = (props) => {
       <div>
         <PostItem post={post} showActions={false} />
         <CommentForm postId={post._id} />
+        <CommentFeed postId={post._id} comments={post.comments}/>
       </div>
     )
   }

@@ -29,8 +29,6 @@ const PostForm = (props) => {
     }
 
     props.addPost(newPost)
-
-    setErrors("")
     setState("")
   }
 

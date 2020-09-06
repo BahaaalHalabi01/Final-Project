@@ -32,7 +32,6 @@ const CommentForm = (props) => {
 
     props.addComment(newComment, postId)
 
-    setErrors("")
     setState("")
   }
 

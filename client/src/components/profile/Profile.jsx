@@ -13,28 +13,33 @@ function Profile(props) {
   const {
     history,
     getProfileByHandle,
-    profile: { profile, loading },
+    // profile: { profile, loading },
   } = props
+
+  const { profile, loading } = props.profile
 
   const firstRender = useRef(true)
 
   let profileContent
   const { handle } = props.match.params
+
+  // //component did mount
   useEffect(() => {
     if (handle) {
       getProfileByHandle(handle)
     }
-  }, [handle, getProfileByHandle])
+  }, [handle])
 
-  useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false
-      return
-    }
-    if (profile === null && loading) {
-      history.push("/not-found")
-    }
-  }, [loading, profile, history])
+  //component did receive props
+  // useEffect(() => {
+  //   if (firstRender.current) {
+  //     firstRender.current = false
+  //     return
+  //   }
+  //   if (profile === null && loading) {
+  //     history.push("/not-found")
+  //   }
+  // }, [profile, loading, handle])
 
   if (profile === null || loading) {
     profileContent = <Spinner />
@@ -52,7 +57,7 @@ function Profile(props) {
         <ProfileHeader profile={profile} />
         <ProfileAbout profile={profile} />
         <ProfileCreds education={profile.education} experience={profile.experience} />
-        {profile.githubusername && <ProfileGithub username={profile.githubusername} />}
+        {profile.githubusername ? <ProfileGithub username={profile.githubusername} /> : null}
       </div>
     )
   }
