@@ -3,13 +3,30 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import classnames from "classnames"
 import { Link } from "react-router-dom"
-import { deletePost } from "../../actions/postActions"
+import { deletePost, addLike, removeLike } from "../../actions/postActions"
 
 const PostItem = (props) => {
   const { post, auth } = props
 
   function handleDeleteClick() {
     props.deletePost(post._id)
+  }
+
+  function onLikeClick() {
+    props.addLike(post._id)
+  }
+
+  function onUnLikeClick() {
+    props.removeLike(post._id)
+  }
+
+  function findUserLike(likes) {
+    if (likes.filter((like) => like.user === auth.user.id).length > 0) {
+      console.log("already")
+      return true
+    } else {
+      return false
+    }
   }
 
   return (
@@ -24,11 +41,15 @@ const PostItem = (props) => {
         </div>
         <div className='col-md-10'>
           <p className='lead'>{post.text}</p>
-          <button type='button' className='btn btn-light mr-1'>
-            <i className='text-info fas fa-thumbs-up'></i>
+          <button type='button' className='btn btn-light mr-1' onClick={onLikeClick}>
+            <i
+              className={classnames("fas fa-thumbs-up", {
+                "text-success": findUserLike(post.likes),
+              })}
+            ></i>
             <span className='badge badge-light'>{post.likes.length}</span>
           </button>
-          <button type='button' className='btn btn-light mr-1'>
+          <button type='button' className='btn btn-light mr-1' onClick={onUnLikeClick}>
             <i className='text-secondary fas fa-thumbs-down'></i>
           </button>
           <Link to={`/post/${post._id}`} className='btn btn-info mr-1'>
@@ -47,6 +68,8 @@ const PostItem = (props) => {
 
 PostItem.propTypes = {
   deletePost: PropTypes.func.isRequired,
+  addLike: PropTypes.func.isRequired,
+  removeLike: PropTypes.func.isRequired,
   post: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
 }
@@ -55,4 +78,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 })
 
-export default connect(mapStateToProps, { deletePost })(PostItem)
+export default connect(mapStateToProps, { deletePost, addLike, removeLike })(PostItem)
