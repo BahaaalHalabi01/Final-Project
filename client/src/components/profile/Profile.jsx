@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { connect } from "react-redux"
 import PropTypes from "prop-types"
 import { Link } from "react-router-dom"
@@ -11,30 +11,33 @@ import { getProfileByHandle } from "../../actions/profileActions"
 
 function Profile(props) {
   const {
+    history,
     getProfileByHandle,
-    profile: { profile },
-    loading,
+    profile: { profile, loading },
   } = props
+
+  const [state, setState] = useState({})
 
   const firstRender = useRef(true)
 
   let profileContent
 
   useEffect(() => {
+    if (props.match.params.handle) {
+      getProfileByHandle(props.match.params.handle)
+    }
+  }, [props.match.params.handle])
+
+  useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false
       return
     }
-    if (profile === null && props.profile.loading) {
+    if (profile === null && loading) {
+      console.log(props)
       props.history.push("/not-found")
     }
-  }, [props.profile])
-
-  useEffect(() => {
-    if (props.match.params.handle) {
-      getProfileByHandle(props.match.params.handle)
-    }
-  }, [])
+  }, [profile, loading])
 
   if (profile === null || loading) {
     profileContent = <Spinner />

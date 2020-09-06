@@ -6,18 +6,19 @@ import { getProfiles } from "../../actions/profileActions"
 import ProfileItem from "./ProfileItem"
 
 function Profiles(props) {
-  const { getProfiles, profile, loading } = props
+  const { getProfiles, profile } = props
+  const { loading, profiles } = profile
 
   useEffect(() => {
     getProfiles()
-  }, [])
+  }, [getProfiles])
 
   let profileItems
-  if (profile.profiles === null || loading) {
+  if (profiles === null || loading) {
     profileItems = <Spinner />
   } else {
-    if (profile.profiles.length > 0) {
-      profileItems = profile.profiles.map((element) => <ProfileItem key={element._id} profile={element} />)
+    if (profiles.length > 0) {
+      profileItems = profiles.map((element) => <ProfileItem key={element._id} profile={element} />)
     } else {
       profileItems = <h4>No profiles found...</h4>
     }

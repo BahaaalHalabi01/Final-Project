@@ -52,7 +52,7 @@ function EditProfile(props) {
       profile.instagram = !isEmpty(profile.social.instagram) ? profile.instagram : ""
       setState(profile)
     }
-  }, [props.profile.profile])
+  }, [props.profile.profile, getCurrentProfile])
 
   function onSubmit(event) {
     event.preventDefault()

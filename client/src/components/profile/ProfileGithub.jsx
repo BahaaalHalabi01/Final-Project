@@ -11,19 +11,18 @@ export default function ProfileGithub(props) {
     repos: [],
   })
 
-  useEffect(() => {
-    const { username } = props
-    const { count, sort, clientId, clientSecret } = state
+  const { username } = props
+  const { count, sort, clientId, clientSecret } = state
 
-    fetch(
-      `https://api.github.com/users/${username}/repos?per_page=${count}&soirt=${sort}&client_id=${clientId}&client_secret=${clientSecret}`
-    )
+  useEffect(() => {
+    const gitUrl = `https://api.github.com/users/${username}/repos?per_page=${count}&soirt=${sort}&client_id=${clientId}&client_secret=${clientSecret}`
+    fetch(gitUrl)
       .then((res) => res.json())
       .then((data) => {
         setState({ ...state, repos: data })
       })
       .catch((err) => console.log(err))
-  }, [])
+  }, [setState])
 
   const { repos } = state
   const repoItems = repos.map((repo) => (

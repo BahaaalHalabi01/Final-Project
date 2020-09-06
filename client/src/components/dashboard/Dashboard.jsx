@@ -13,7 +13,7 @@ function Dashboard(props) {
 
   useEffect(() => {
     getCurrentProfile()
-  }, [])
+  }, [getCurrentProfile])
 
   function onDeleteClick(event) {
     props.deleteAccount()
