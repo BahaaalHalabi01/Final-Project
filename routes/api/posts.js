@@ -162,13 +162,6 @@ router.post("/comment/:id", passport.authenticate("jwt", { session: false }), (r
 // @description Delete comment to a post by its id
 // @access      private
 router.delete("/comment/:id/:comment_id", passport.authenticate("jwt", { session: false }), (req, res) => {
-  const { errors, isValid } = validatePostInput(req.body)
-
-  //validation
-  if (!isValid) {
-    return res.status(400).json(errors)
-  }
-
   Post.findById(req.params.id)
     .then((post) => {
       //check to see if the comment exists
