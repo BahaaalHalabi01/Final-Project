@@ -1,5 +1,4 @@
 import React from "react"
-import PropTypes from "prop-types"
 import isEmpty from "../../validation/isEmpty"
 
 export default function ProfileAbout(props) {

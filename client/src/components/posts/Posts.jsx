@@ -7,9 +7,11 @@ import Spinner from "../common/Spinner"
 import { getPosts } from "../../actions/postActions"
 
 const Posts = (props) => {
+  //fix this error hooks
+  const { getPosts } = props
   useEffect(() => {
-    props.getPosts()
-  }, [])
+    getPosts()
+  }, [getPosts])
 
   const { posts, loading } = props.post
   let postContent

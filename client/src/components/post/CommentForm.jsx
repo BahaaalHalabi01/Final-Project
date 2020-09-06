@@ -22,7 +22,7 @@ const CommentForm = (props) => {
   function handleSubmit(event) {
     event.preventDefault()
     const { user } = props.auth
-    const { postID } = props
+    const { postId } = props
 
     const newComment = {
       text: state,
@@ -30,7 +30,7 @@ const CommentForm = (props) => {
       avatar: user.avatar,
     }
 
-    props.addComment(newComment, postID)
+    props.addComment(newComment, postId)
 
     setErrors("")
     setState("")

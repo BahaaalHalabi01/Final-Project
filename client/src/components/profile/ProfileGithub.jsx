@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import PropTypes from "prop-types"
 
@@ -22,7 +22,7 @@ export default function ProfileGithub(props) {
         setState({ ...state, repos: data })
       })
       .catch((err) => console.log(err))
-  }, [setState])
+  }, [username, count, sort, clientId, clientSecret, state])
 
   const { repos } = state
   const repoItems = repos.map((repo) => (
