@@ -9,7 +9,7 @@ import { getPosts } from "../../actions/postActions"
 const Posts = (props) => {
   useEffect(() => {
     props.getPosts()
-  }, [props.getPosts])
+  }, [])
 
   const { posts, loading } = props.post
   let postContent
